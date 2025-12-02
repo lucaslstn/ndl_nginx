@@ -29,10 +29,16 @@ if [ "$CHOIX" == "1" ]; then
     echo "Clonage de GitHub..."
     git clone "$URL_GIT" "$DOSSIER"
 
-
-
-    # à ajoutergestion cron qui met à jour le site automatiquement
-
+    #  gestion cron (mise à jour auto du site)
+    echo "Activation de la mise à jour automatique"
+    CRON_FILE="/etc/cron.d/update_$SITE"
+    
+    # Explication : 
+    # 1. */60 : Se lance toutes les 60 minutes 
+    # 2. sleep $((RANDOM % 300))  Attend un temps aléatoire entre 0 et 5 min avant de lancer.
+    # 3. git fetch & reset  Force la version GitHub exacte.
+    
+    echo "*/60 * * * * root sleep \$((RANDOM \% 300)) && cd $DOSSIER && git fetch --all && git reset --hard origin/HEAD && chown -R www-data:www-data $DOSSIER" > "$CRON_FILE"
 else
     # Option SITE VIDE partir de 0 
     echo "Création d'un site local..."
@@ -76,3 +82,6 @@ systemctl reload nginx
 echo ""
 echo -e "${GREEN}Terminé, le site est prêt.${RESET}"
 echo "Dossier : $DOSSIER"
+if [ "$CHOIX" == "1" ]; then
+    echo "Mise à jour auto : ACTIVE (toutes les 30 min)"
+fi
