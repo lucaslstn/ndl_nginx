@@ -33,12 +33,7 @@ if [ "$CHOIX" == "1" ]; then
     echo "Activation de la mise à jour automatique"
     CRON_FILE="/etc/cron.d/update_$SITE"
     
-    # Explication : 
-    # 1. */60 : Se lance toutes les 60 minutes 
-    # 2. sleep $((RANDOM % 300))  Attend un temps aléatoire entre 0 et 5 min avant de lancer.
-    # 3. git fetch & reset  Force la version GitHub exacte.
-    
-    echo "*/60 * * * * root sleep \$((RANDOM \% 300)) && cd $DOSSIER && git fetch --all && git reset --hard origin/HEAD && chown -R www-data:www-data $DOSSIER" > "$CRON_FILE"
+   # echo "*/60 * * * * root sleep \$((RANDOM \% 300)) && cd $DOSSIER && git fetch --all && git reset --hard origin/HEAD && chown -R www-data:www-data $DOSSIER" > "$CRON_FILE"
 else
     # Option SITE VIDE partir de 0 
     echo "Création d'un site local..."
